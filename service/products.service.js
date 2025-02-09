@@ -70,6 +70,7 @@ async function getAllProducts(category) {
             productQuantity: product.productQuantity,
             productCategory: product.category?.categoryName,
             categoryId: product.category?.id,
+            productImageURL: product?.productImageURL,
         }));
 
         return {
