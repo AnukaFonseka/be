@@ -1,4 +1,4 @@
-const { Order } = require("../models");
+const { Order, Products, Users, Payment } = require("../models");
 //add order.
 async function addOrder(order) {
 
@@ -25,7 +25,25 @@ async function addOrder(order) {
 //All order list.
 async function getAllOrder(){
     try {
-        const listOfOrder = await Order.findAll({});
+        const listOfOrder = await Order.findAll({
+            include: [
+                {
+                    model: Products,
+                    as: "product",
+                    attributes: ["id", "productName", "productPrice"]
+                },
+                {
+                    model: Users,
+                    as: "user",
+                    attributes: ["id", "firstName", "lastName"]
+                },
+                {
+                    model: Payment,
+                    as: "payment",
+                    attributes: ["id", "amount", "paymentMode"]
+                }
+            ]
+        });
 
         if(!listOfOrder) {
             return {
@@ -40,10 +58,14 @@ async function getAllOrder(){
            
             return {
                 id: order.id,
-                productId: order.productId,
-                userId: order.userId,
-                productQuantity: order.productQuantity,
-                paymentId:order.paymentId
+                product: order.product?.productName,
+                productPrice: order?.product?.productPrice,
+                productQuantity: order?.productQuantity,    
+                user: order.user?.firstName + " " + order.user?.lastName,
+                Amount: order?.payment?.amount,
+                paymentMode: order.payment?.paymentMode,
+                createdAt: order.createdAt,
+                address: order?.address
                 }
         })
         return {
@@ -84,6 +106,29 @@ async function getOrderById(id) {
     }
 }
 
+async function deleteOrderById(id) {
+    try {
+        const order = await Order.findByPk(id);
+        if (!order) {
+            return {
+                error: true,
+                status: 404,
+                payload: "Order not found."
+            }
+        }
+
+        await order.destroy();
+
+        return {
+            error: false,
+            status: 200,
+            payload: "Order deleted successfully."
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 
 
@@ -91,6 +136,7 @@ module.exports = {
     addOrder,
     getAllOrder,
     getOrderById,
+    deleteOrderById
 
 
     

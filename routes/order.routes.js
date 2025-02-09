@@ -12,6 +12,7 @@ function getOrderRoutes(){
 
     router.get("/getAllOrder", orderController.getAllOrder);
     router.get("/getOrderById/:id", orderController.getOrderById);
+    router.delete("/deleteOrderById/:id", orderController.deleteOrderById);
     
 
     return router;

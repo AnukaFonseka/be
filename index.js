@@ -25,8 +25,8 @@ try {
     db.Cart.belongsTo(db.Products, {as:"product", foreignKey:"productId"});
     db.Products.hasMany(db.Cart, {as:"carts", foreignKey:"productId"});
 
-    db.Order.belongsTo(db.Users, {as:"user", foreignKey:"userId"});
-    db.Users.hasMany(db.Order, { as:"orders", foreignKey:"userId"});
+    db.Order.belongsTo(db.Users, {as:"user", foreignKey:"userId", onDelete: 'CASCADE'});
+    db.Users.hasMany(db.Order, { as:"orders", foreignKey:"userId", onDelete: 'CASCADE'});
     db.Order.belongsTo(db.Payment, {as:"payment", foreignKey:"paymentId"});
     db.Payment.hasOne(db.Order,{as:"order", foreignKey:"paymentId"});
     db.Order.belongsTo(db.Products, {as:"product", foreignKey:"productId"});
